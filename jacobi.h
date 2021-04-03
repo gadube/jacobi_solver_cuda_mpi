@@ -3,7 +3,7 @@
 
 #include "utils.h"
 
-void launch_jacobi(double* M_d, double* U_d, double* error_d, double eb, int maxIter, int numRows, int numCols);
+void launch_jacobi(double* M_d, double* U_d, double* error_d, double* toterr, double eb, int maxIter, int numRows, int numCols);
 
 
 #endif
