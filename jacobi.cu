@@ -62,8 +62,9 @@ void find_sum(double* M, int size, double* out)
 
 void launch_jacobi(double* M_d, double* U_d, double* error_d, double* toterr, double eb, int maxIter, int numRows, int numCols)
 {
-    int k = 0;
+    int rank, k = 0;
     double error;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     dim3 block(BLOCK, BLOCK, 1);
     dim3 grid((numCols + BLOCK - 1)/BLOCK, (numRows + BLOCK - 1)/BLOCK, 1);
@@ -78,7 +79,7 @@ void launch_jacobi(double* M_d, double* U_d, double* error_d, double* toterr, do
         find_sum<<<1,1024>>>(toterr, 24, toterr);
         checkCudaErrors(cudaMemcpy(&error, toterr, sizeof(double), cudaMemcpyDeviceToHost));
         error = error / (numCols * numRows);
-        debug("Iter: %3d, Error: %0.10f\n", k, error);
+        debug("%d | Iter: %3d, Error: %0.10f\n", rank, k, error);
         k++; 
     }while (k < maxIter && error > eb);
 }
